@@ -110,6 +110,8 @@ public class App {
         synchronized (object) {
             object.notifyAll();
         }
+
+        // End of Main
     }
 
     private static class InternalRunnableWaitingThread implements Runnable {
