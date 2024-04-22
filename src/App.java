@@ -3,6 +3,8 @@ import basicthread.HelloThread;
 import basicthread.HiThread;
 import lifecycle.LifeCycleThread;
 import lifecycle.TimedWaitingRunnable;
+import priority.PriorityThread1;
+import priority.PriorityThread2;
 import synchronization.Counter;
 import synchronization.CounterWithSynchronization;
 
@@ -10,6 +12,7 @@ public class App {
     private static final Object object = new Object();
 
     public static void main(String[] args) throws Exception {
+
         // Example for Basic Threads
         HiThread hiThread = new HiThread();
         HelloThread helloThread = new HelloThread();
@@ -87,18 +90,21 @@ public class App {
         while (runnableWaitingThread.getState() != Thread.State.WAITING) {
 
         }
-        System.out.println("After making thread Wait, State: " + runnableWaitingThread.getState()); // WAITING State
+        System.out.println("After making thread Wait, State: " +
+                runnableWaitingThread.getState()); // WAITING State
         synchronized (object) {
             object.notifyAll();
         }
-        System.out.println("After notifying the thread, State: " + runnableWaitingThread.getState()); // TERMINATED
-                                                                                                      // State
+        System.out.println("After notifying the thread, State: " +
+                runnableWaitingThread.getState()); // TERMINATED
+        // State
         Thread timedWaitingThread = new Thread(new TimedWaitingRunnable());
         timedWaitingThread.start();
         while (timedWaitingThread.getState() != Thread.State.TIMED_WAITING) {
 
         }
-        System.out.println("Timed Waiting Thread, State: " + timedWaitingThread.getState()); // TIMED_WAITING State
+        System.out.println("Timed Waiting Thread, State: " +
+                timedWaitingThread.getState()); // TIMED_WAITING State
         Thread lockholderThread = new Thread(new LockHolder());
         Thread blockedThread = new Thread(new BlockedThread());
         lockholderThread.start();
@@ -106,10 +112,31 @@ public class App {
         while (blockedThread.getState() != Thread.State.BLOCKED) {
 
         }
-        System.out.println("After Blocking the Thread, State: " + blockedThread.getState()); // BLOCKED State
+        System.out.println("After Blocking the Thread, State: " +
+                blockedThread.getState()); // BLOCKED State
         synchronized (object) {
             object.notifyAll();
         }
+
+        // Example for Thread Priority
+
+        PriorityThread1 priorityThread1 = new PriorityThread1();
+        PriorityThread2 priorityThread2 = new PriorityThread2();
+
+        System.out.println("Priority of priorityThread1: " + priorityThread1.getPriority());
+        System.out.println("Priority of priorityThread2: " + priorityThread2.getPriority());
+
+        priorityThread1.setPriority(3);
+        priorityThread2.setPriority(7);
+
+        priorityThread1.setPriority(Thread.MIN_PRIORITY);
+        priorityThread2.setPriority(Thread.MAX_PRIORITY);
+
+        priorityThread1.start();
+        priorityThread2.start();
+
+        System.out.println("After changing priority, priorityThread1: " + priorityThread1.getPriority());
+        System.out.println("After changing priority, priorityThread2: " + priorityThread2.getPriority());
 
         // End of Main
     }
