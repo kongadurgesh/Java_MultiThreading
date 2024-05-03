@@ -9,6 +9,8 @@ import priority.PriorityThread1;
 import priority.PriorityThread2;
 import synchronization.Counter;
 import synchronization.CounterWithSynchronization;
+import synchronization.StringBufferCounter;
+import synchronization.StringBuilderCounter;
 
 public class App {
     private static final Object object = new Object();
@@ -166,6 +168,46 @@ public class App {
             basicThread.start(); // runs unique thread everytime
 
         }
+
+        StringBuilderCounter stringCounter = new StringBuilderCounter();
+        Thread stringThread1 = new Thread(() -> {
+            for (int i = 0; i < 2000; i++) {
+                stringCounter.increment();
+            }
+        });
+
+        Thread stringThread2 = new Thread(() -> {
+            for (int i = 0; i < 2000; i++) {
+                stringCounter.increment();
+            }
+        });
+
+        stringThread1.start();
+        stringThread2.start();
+        stringThread1.join();
+        stringThread2.join();
+
+        System.out.println(stringCounter.getStringBuilder().length());
+
+        StringBufferCounter stringBufferCounter = new StringBufferCounter();
+        Thread bufferThread1 = new Thread(() -> {
+            for (int i = 0; i < 2000; i++) {
+                stringBufferCounter.increment();
+            }
+        });
+
+        Thread bufferThread2 = new Thread(() -> {
+            for (int i = 0; i < 2000; i++) {
+                stringBufferCounter.increment();
+            }
+        });
+
+        bufferThread1.start();
+        bufferThread2.start();
+        bufferThread1.join();
+        bufferThread2.join();
+
+        System.out.println(stringBufferCounter.getStringBuffer().length());
         // End of Main
     }
 
